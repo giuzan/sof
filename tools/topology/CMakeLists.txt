@@ -126,6 +126,7 @@ set(TPLGS
 	"sof-ehl-rt5660\;sof-ehl-rt5660-nohdmi"
 	"sof-imx8qxp-nocodec\;sof-imx8qxp-nocodec"
 	"sof-imx8qxp-cs42888\;sof-imx8qxp-cs42888"
+	"sof-imx8-cs42888-demux\;sof-imx8-cs42888-demux"
 	"sof-imx8qxp-nocodec-sai\;sof-imx8qxp-nocodec-sai"
 	"sof-imx8qxp-wm8960\;sof-imx8qxp-wm8960"
 	"sof-tgl-max98357a-rt5682\;sof-tgl-max98357a-rt5682"

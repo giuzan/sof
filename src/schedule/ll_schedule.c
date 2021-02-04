@@ -310,9 +310,10 @@ static int schedule_ll_task(void *data, struct task *task, uint64_t start,
 			    uint64_t period)
 {
 	struct ll_schedule_data *sch = data;
-	struct ll_task_pdata *pdata;
+	struct ll_task_pdata *pdata, *reg_pdata;
 	struct list_item *tlist;
-	struct task *curr_task;
+	struct task *curr_task, *registrable_task = NULL;
+	struct pipeline_task *pipe_task;
 	uint32_t flags;
 	int ret = 0;
 
@@ -334,6 +335,35 @@ static int schedule_ll_task(void *data, struct task *task, uint64_t start,
 		task->priority, task->flags, start, period);
 
 	pdata->period = period;
+
+	/* for full synchronous domain, calculate ratio and initialize */
+	/* skip_cnt for task */
+	if (sch->domain->full_sync) {
+		pdata->ratio = 1;
+		pdata->skip_cnt = (uint16_t)(-1);
+
+		/* get the registrable task */
+		list_for_item(tlist, &sch->tasks) {
+			curr_task = container_of(tlist, struct task, list);
+			pipe_task = pipeline_task_get(curr_task);
+
+			/* registrable task found */
+			if (pipe_task->registrable) {
+				registrable_task = curr_task;
+				break;
+			}
+		}
+
+		/* we found a registrable task */
+		if (registrable_task) {
+			reg_pdata = ll_sch_get_pdata(registrable_task);
+
+			/* the assumption is that the registrable task has */
+			/* the smallest period */
+			assert(period >= reg_pdata->period);
+			pdata->ratio = period / reg_pdata->period;
+		}
+	}
 
 	/* insert task into the list */
 	schedule_ll_task_insert(task, &sch->tasks);

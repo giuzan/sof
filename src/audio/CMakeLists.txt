@@ -24,6 +24,9 @@ if(NOT CONFIG_LIBRARY)
 	if(CONFIG_COMP_DCBLOCK)
 		add_subdirectory(dcblock)
 	endif()
+	if(CONFIG_COMP_TEST_LOOP)
+		add_subdirectory(test_loop)
+	endif()
 	if(CONFIG_COMP_CROSSOVER)
 		add_subdirectory(crossover)
 	endif()
@@ -112,7 +115,7 @@ check_optimization(fma -mfma -DOPS_FMA)
 check_optimization(hifi2ep -mhifi2ep -DOPS_HIFI2EP)
 check_optimization(hifi3 -mhifi3 -DOPS_HIFI3)
 
-set(sof_audio_modules volume src asrc eq-fir eq-iir dcblock crossover tdfb)
+set(sof_audio_modules volume src asrc eq-fir eq-iir dcblock crossover tdfb testloop)
 
 # sources for each module
 set(volume_sources volume/volume.c volume/volume_generic.c)
@@ -123,6 +126,7 @@ set(eq-iir_sources eq_iir/eq_iir.c eq_iir/iir.c)
 set(dcblock_sources dcblock/dcblock.c dcblock/dcblock_generic.c)
 set(crossover_sources crossover/crossover.c crossover/crossover_generic.c)
 set(tdfb_sources tdfb/tdfb.c tdfb/tdfb_generic.c)
+set(testloop_sources test_loop/test_loop.c)
 
 foreach(audio_module ${sof_audio_modules})
 	# first compile with no optimizations
